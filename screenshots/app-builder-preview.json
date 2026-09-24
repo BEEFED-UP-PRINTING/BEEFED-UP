@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "BUP AI",
+      "hasCanvas": false,
+      "bodyTextLen": 6,
+      "bodyTextHash": "c70757492f3d9a076927ed4df14892a1a35a9bc1b67895b835c48fb9b69bcb44",
+      "bodyTextPrefix": "BUP AI",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "BUP AI",
+      "hasCanvas": false,
+      "bodyTextLen": 6,
+      "bodyTextHash": "c70757492f3d9a076927ed4df14892a1a35a9bc1b67895b835c48fb9b69bcb44",
+      "bodyTextPrefix": "BUP AI",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
