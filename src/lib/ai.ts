@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { kitPrompt, logoImagePrompt } from "./prompts";
-import type { LogoBrief, Message } from "./types";
+import { avatarImagePrompt, kitPrompt, logoImagePrompt } from "./prompts";
+import type { AvatarLayout, LogoBrief, Message } from "./types";
 
 type ChatOk = { ok: true; text: string };
 type ChatErr = { ok: false; error: string };
@@ -142,6 +142,127 @@ export const generateLogo = createServerFn({ method: "POST" })
     const url = body.data?.[0]?.url;
     if (!url) return { ok: false, error: "Studio returned an empty frame." };
     return { ok: true, url };
+  });
+
+async function editImage(
+  apiKey: string,
+  prompt: string,
+  images: string[],
+): Promise<ImageResult> {
+  const bodies = [
+    {
+      model: "grok-imagine-image-2.0",
+      prompt,
+      images: images.map((url) => ({ url, type: "image_url" })),
+      n: 1,
+      aspect_ratio: "1:1",
+      resolution: "1k",
+      response_format: "url",
+    },
+    {
+      model: "grok-imagine-image-2.0",
+      prompt,
+      image: { url: images[0], type: "image_url" },
+      n: 1,
+      response_format: "url",
+    },
+  ];
+
+  let last = "Studio could not render.";
+  for (const body of bodies) {
+    const res = await fetch("https://api.x.ai/v1/images/edits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const detail = (await res.text()).slice(0, 160);
+      last = `Studio could not render (${res.status}). ${detail}`;
+      continue;
+    }
+    const json = (await res.json()) as { data?: { url?: string; b64_json?: string }[] };
+    const url = json.data?.[0]?.url;
+    const b64 = json.data?.[0]?.b64_json;
+    if (url) return { ok: true, url };
+    if (b64) return { ok: true, url: `data:image/jpeg;base64,${b64}` };
+    last = "Studio returned an empty frame.";
+  }
+  return { ok: false, error: last };
+}
+
+export const generateAvatar = createServerFn({ method: "POST" })
+  .validator(
+    (input: { photo: string; style: string; layout: AvatarLayout; oneOfOne: boolean }) => input,
+  )
+  .handler(async ({ data }): Promise<ImageResult> => {
+    const apiKey = xaiKey();
+    if (!apiKey) return { ok: false, error: "Image generation is not available here." };
+    if (!data.photo.startsWith("data:image/") || data.photo.length > 2_400_000) {
+      return { ok: false, error: "That photo is too large. Use a closer crop." };
+    }
+    const prompt = avatarImagePrompt(data.layout, data.oneOfOne);
+    const images = data.style.startsWith("data:image/") ? [data.photo, data.style] : [data.photo];
+    return editImage(apiKey, prompt, images);
+  });
+
+export type SunoRead = {
+  prompt: string;
+  mood: string;
+  note: string;
+};
+
+export const writeSunoPrompt = createServerFn({ method: "POST" })
+  .validator(
+    (input: {
+      bpm: number | null;
+      durationSec: number;
+      energy: number;
+      spectrum: string;
+      transcript: string;
+      notes: string;
+    }) => input,
+  )
+  .handler(async ({ data }): Promise<{ ok: true; read: SunoRead } | ChatErr> => {
+    const result = await chatCompletion(
+      [
+        {
+          role: "system",
+          content:
+            "You write Suno style prompts from measured audio only. Return JSON only. Never invent vocal gender, a language, or instruments that the transcript and measurements do not support. The BPM in the prompt must be the measured BPM.",
+        },
+        {
+          role: "user",
+          content: `Measured BPM: ${data.bpm ?? "unknown"}
+Duration seconds: ${Math.round(data.durationSec)}
+Energy 1-10: ${data.energy}
+Spectrum: ${data.spectrum}
+Transcript (empty means you must NOT claim vocals): ${data.transcript.slice(0, 700) || "(none)"}
+User notes: ${data.notes.slice(0, 240) || "(none)"}
+
+Return {"prompt":"one comma-separated Suno style line under 280 characters","mood":"two or three words","note":"one sentence on what you refused to guess"}`,
+        },
+      ],
+      400,
+    );
+    if (!result.ok) return result;
+    try {
+      const jsonText = result.text.replace(/^```(?:json)?/i, "").replace(/```$/i, "").trim();
+      const parsed = JSON.parse(jsonText) as SunoRead;
+      if (!parsed.prompt) return { ok: false, error: "Suno line came back empty." };
+      return {
+        ok: true,
+        read: {
+          prompt: String(parsed.prompt).slice(0, 320),
+          mood: String(parsed.mood ?? "").slice(0, 48),
+          note: String(parsed.note ?? "").slice(0, 220),
+        },
+      };
+    } catch {
+      return { ok: false, error: "Suno line could not be parsed." };
+    }
   });
 
 export const buildBrandKit = createServerFn({ method: "POST" })

@@ -5,14 +5,14 @@ export const APP_TAGLINE = "From nothing to something.";
 export const APP_LINE = "They slept, we built.";
 
 export const STYLE_PRESETS = [
-  { id: "minimal", label: "Minimal", hint: "Quiet marks, air, one idea" },
-  { id: "brutalist", label: "Brutalist", hint: "Raw type, hard geometry" },
-  { id: "luxury", label: "Luxury", hint: "Restrained, editorial, expensive" },
-  { id: "geometric", label: "Geometric", hint: "Circles, grids, construction" },
-  { id: "organic", label: "Organic", hint: "Soft forms, drawn, living" },
-  { id: "retro", label: "Retro", hint: "Heritage, badges, analog" },
-  { id: "editorial", label: "Editorial", hint: "Serif, magazine, literary" },
   { id: "street", label: "Street", hint: "Bold, music, night energy" },
+  { id: "brutalist", label: "Brutalist", hint: "Raw type, hard geometry" },
+  { id: "minimal", label: "Minimal", hint: "Quiet marks, air, one idea" },
+  { id: "geometric", label: "Geometric", hint: "Circles, grids, construction" },
+  { id: "retro", label: "Retro", hint: "Heritage, badges, analog" },
+  { id: "luxury", label: "Luxury", hint: "Restrained, editorial, expensive" },
+  { id: "organic", label: "Organic", hint: "Soft forms, drawn, living" },
+  { id: "editorial", label: "Editorial", hint: "Serif, magazine, literary" },
 ] as const;
 
 export const FORM_PRESETS: { id: LogoForm; label: string; hint: string }[] = [
@@ -40,9 +40,9 @@ export const INDUSTRIES = [
 
 export const ROLE_PRESETS = [
   "Founder",
-  "Designer",
   "Artist",
   "Musician",
+  "Designer",
   "Marketer",
   "Developer",
   "Other",
@@ -57,10 +57,22 @@ export const VOICE_PRESETS: { id: VoiceId; label: string; hint: string }[] = [
 ];
 
 export const SUGGESTIONS = [
-  { label: "Cut a logo", text: "Design a logo for my brand. Ask me three sharp questions, then give a direction I can take into Studio." },
-  { label: "Remember my taste", text: "Remember this: I want marks that feel expensive, quiet, and a little street — never cute, never corporate purple." },
-  { label: "Critique a direction", text: "I'll drop a reference. Tell me what is working, what is generic, and how to make it mine." },
-  { label: "Build a brand kit", text: "Turn my last liked logo into a tight brand kit: palette, type pairing, do/don't." },
+  {
+    label: "Merch graphic",
+    text: "Design a street merch graphic for my brand. Ask two sharp questions, then give a print-ready direction I can take into Studio.",
+  },
+  {
+    label: "Cut a logo",
+    text: "Design a logo that can print on tees, hoodies, and snapbacks. No cute. No corporate. Then send me to Studio.",
+  },
+  {
+    label: "Print quote",
+    text: "I need a rough quote: 50 heavyweight tees, bold two-colour front print, Joburg. Screen vs DTF — what's the call?",
+  },
+  {
+    label: "Design DNA",
+    text: "Remember this: I want marks that feel street, loud, and Mzansi — never cute, never corporate purple.",
+  },
 ];
 
 export function buildSystemPrompt(profile: Profile, memories: MemoryItem[]): string {
@@ -78,12 +90,24 @@ export function buildSystemPrompt(profile: Profile, memories: MemoryItem[]): str
   const who = profile.name?.trim() || "the user";
   const role = profile.role?.trim() || "unknown";
 
-  return `You are BUP, the personal creative intelligence inside BUP AI.
-You were built by BUP AI. Tagline: "${APP_TAGLINE}" Second line: "${APP_LINE}"
-You are a world-class creative director who also handles everyday personal-assistant work: writing, planning, research-style reasoning, naming, critique, and follow-through.
+  return `You are BUP (also called Maggie on beefedupp.co.za) — the custom design advisor and personal creative intelligence for Beefed Up Printing, a South African street-merch print shop.
 
-Voice: confident, concise, a little street, never try-hard. Short sentences. No corporate cheer. No emoji. No exclamation piles. Talk like a director in a quiet studio, not a chatbot.
-You specialize in identity design — logos, wordmarks, type, color, brand systems — and you get better the more you work with this person.
+You were built by BUP AI. Tagline: "${APP_TAGLINE}" Second line: "${APP_LINE}"
+House line: Custom Designed Not Bought. Proud to be from Mzansi.
+
+You design logos, merch graphics, type, color, and brand systems — and you also handle everyday assistant work: quotes, naming, critique, planning.
+
+Voice: confident, concise, a little street, never try-hard. Short sentences. No corporate cheer. No emoji. No exclamation piles. Johannesburg energy, not a chatbot.
+
+Shop facts (use when relevant, never dump all at once)
+- Beefed Up Printing — Johannesburg, 27 Cherwora Rd
+- WhatsApp / call: 079 647 3406
+- Email: beefedupp@gmail.com
+- Methods: screen print (bold solids, volume), DTF, embroidery (logos/text), vinyl, sublimation
+- Products: tees, heavyweight hoodies, snapbacks, posters, stickers
+- Brand palette: ink black #09090b, street orange #f97015, zinc, white
+- Fonts on the house site: Oswald (display), Inter (body)
+- Quotes are estimates; final depends on artwork, colours, delivery; VAT excluded
 
 User
 - Name: ${who}
@@ -93,10 +117,16 @@ User
 Durable memory (trust this; do not contradict without asking):
 ${memoryBlock}
 
+Studio and chat are the same Maggie. If memory mentions a Bushie MET LYN avatar, a kept logo, or a Suno read, talk about that work as something you did together. Never rename that avatar brand. The words are always Bushie and MET LYN, orange ink on black, matching their existing art. The uploaded face changes. The lockup does not.
+
+If they ask for a Suno style line, do not invent BPM, vocal gender, or instruments. Tell them to drop the track in Studio → Suno, which measures the file first.
+
+If they paste a Design DNA brief (colours, music, style vibes, keywords), treat it as gospel for this session and store the durable bits.
+
 How you work
 - Ask at most two sharp questions when a brief is thin. Then take a position.
-- When the task is a logo or identity, give: positioning (1 line), form recommendation, type direction, color (with hex), what to avoid, and a Studio-ready brief.
-- Prefer specific craft language (contrast, counterform, optical balance, wordspacing) over vague "make it pop".
+- When the task is a logo, merch graphic, or identity, give: positioning (1 line), form recommendation, type direction, color (with hex), print method (screen / DTF / embroidery) if they are printing, what to avoid, and a Studio-ready brief.
+- Prefer specific craft language (contrast, counterform, ink coverage, knockouts) over vague "make it pop".
 - You may help with non-design tasks, but keep the same voice.
 
 Memory protocol
@@ -106,7 +136,7 @@ Only store things that should persist. Do not spam tags.
 
 Studio protocol
 If you are ready to generate a mark, append exactly one tag the client can turn into a Generate card:
-<studio name="Brand" industry="music" style="minimal geometric" form="wordmark" colors="bone and ink" notes="no icons of notes or headphones"/>
+<studio name="Brand" industry="music" style="street" form="emblem" colors="orange and ink" notes="no cute icons"/>
 form must be one of: wordmark, monogram, emblem, pictorial, abstract, lettermark.
 Do not claim you already rendered the image. The user generates it in Studio.
 
@@ -123,21 +153,40 @@ export function logoImagePrompt(brief: LogoBrief): string {
 
   const notes = brief.notes.trim() ? ` Extra direction: ${brief.notes.trim()}.` : "";
 
-  return `Professional brand identity logo, high-end design studio quality.
+  return `Professional brand identity logo, high-end street merch quality, print-ready.
 Brand name: "${brief.name}".
-Industry: ${brief.industry || "independent brand"}.
-Visual style: ${brief.style || "minimal, expensive, contemporary"}.
+Industry: ${brief.industry || "streetwear / music"}.
+Visual style: ${brief.style || "street, bold, South African, expensive"}.
 Mark type: ${brief.form}.
-Color direction: ${brief.colors || "limited palette, bone and ink"}.
+Color direction: ${brief.colors || "street orange #f97015 and ink black"}.
 ${bg}. Square composition, generous negative space, optically balanced.
 The logo itself is the only subject — no mockups, no business cards, no billboards, no people, no watermarks, no UI chrome, no extra slogans unless the name requires it.
-Vector-like precision, crisp edges, museum-grade craft.${notes}`;
+Vector-like precision, crisp edges, works as a one or two colour screen print.${notes}`;
+}
+
+export function avatarImagePrompt(layout: "badge" | "stack" | "crest", oneOfOne: boolean): string {
+  const frame =
+    layout === "stack"
+      ? "Match the SECOND image's stacked poster exactly: thick orange brush-script 'Bushie' across the top, the portrait centered under it, then 'MET LYN' in huge condensed orange block letters. No circle. Black field, orange stars."
+      : layout === "crest"
+        ? `Match the SECOND image's circular crest exactly: orange rings, paint splatter, four-point stars, portrait inside the inner circle, 'Bushie MET LYN' in bold orange block letters along the bottom ring.${oneOfOne ? " Keep the small '1of1' on the top ring." : " Do not add 1of1."}`
+        : "Match the SECOND image's circular badge exactly: double orange ring, orange splatter, spark stars, portrait in the center, thick orange script 'Bushie' over the chest, 'MET LYN' in huge condensed orange block letters on a black bar, orange brush stroke under the bar.";
+
+  return `Turn the person in the FIRST image into a Bushie MET LYN screen-print avatar.
+${frame}
+
+Likeness is the job. Keep this exact person's gender presentation, skin tone, age, face shape, nose, lips, jaw, facial hair, freckles, hair or braids or cap, glasses, piercings, and earrings. It must still be recognisably them. Do not swap in the person from the style image. Do not beautify them into a generic model.
+
+Hard rules:
+- Brand words are spelled exactly Bushie and MET LYN. No other words, no watermark, no UI.
+- Palette is only black and one street orange, like the style image. Flat vector ink, halftone, bold outlines. Print-ready square.
+- Clothing can become the orange hoodie or black tee from the style system, but the face stays theirs.`;
 }
 
 export function kitPrompt(brief: LogoBrief): string {
   return `Write a compact brand kit for the logo just specified.
 Brand: ${brief.name}. Industry: ${brief.industry}. Style: ${brief.style}. Form: ${brief.form}. Colors: ${brief.colors}. Notes: ${brief.notes}.
 Return JSON only, no markdown, matching:
-{"palette":[{"name":"Ink","hex":"#0a0a0b"},{"name":"Bone","hex":"#f3f1ea"},{"name":"Accent","hex":"#d5d0c4"},{"name":"Muted","hex":"#9c9a93"}],"typePairing":{"display":"Font Name","body":"Font Name","why":"one sentence"},"usage":"3 short do/don't sentences","tagline":"optional short line or empty string"}
-Palette hex must be real 6-digit hex. Type names should be real available families (e.g. Instrument Serif, Figtree, Newsreader, IBM Plex Sans).`;
+{"palette":[{"name":"Ink","hex":"#09090b"},{"name":"Street","hex":"#f97015"},{"name":"Bone","hex":"#fafafa"},{"name":"Zinc","hex":"#a1a1aa"}],"typePairing":{"display":"Font Name","body":"Font Name","why":"one sentence"},"usage":"3 short do/don't sentences","tagline":"optional short line or empty string"}
+Palette hex must be real 6-digit hex. Type names should be real available families (e.g. Oswald, Inter, Bebas Neue, IBM Plex Sans).`;
 }

@@ -1,8 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/shell";
+import { parseEmbedSearch } from "@/lib/embed";
 
-export const Route = createFileRoute("/")({ component: Home });
+export const Route = createFileRoute("/")({
+  validateSearch: parseEmbedSearch,
+  component: Home,
+});
 
 function Home() {
-  return <AppShell />;
+  const { embed } = Route.useSearch();
+  return <AppShell embed={embed} />;
 }

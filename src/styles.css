@@ -1,32 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
-  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Oswald", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Oswald", ui-sans-serif, system-ui, sans-serif;
 
-  --color-bg: #0a0a0b;
-  --color-surface: #121214;
-  --color-raised: #1a1a1d;
-  --color-fg: #f3f1ea;
-  --color-muted: #9c9a93;
-  --color-subtle: #6e6c66;
-  --color-accent: #d5d0c4;
-  --color-accent-fg: #0a0a0b;
-  --color-border: #26262b;
-  --color-ring: #d5d0c4;
-  --color-live: #c45c4a;
-  --color-good: #7d9a7a;
+  --color-bg: #09090b;
+  --color-surface: #0a0a0a;
+  --color-raised: #18181b;
+  --color-fg: #fafafa;
+  --color-muted: #a1a1aa;
+  --color-subtle: #71717a;
+  --color-accent: #f97015;
+  --color-accent-fg: #0a0a0a;
+  --color-border: #27272a;
+  --color-ring: #f97015;
+  --color-live: #f97015;
+  --color-good: #25d366;
 
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 28px;
-  --radius-3xl: 36px;
+  --radius-xs: 2px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-3xl: 16px;
 
-  --shadow-soft: 0 24px 60px -28px rgb(0 0 0 / 0.55);
+  --shadow-soft: 0 0 40px -8px rgb(249 112 21 / 0.35);
 }
 
 @layer base {
@@ -70,6 +70,9 @@
   h2,
   h3 {
     text-wrap: balance;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   p {
@@ -80,11 +83,17 @@
 @layer utilities {
   .font-display {
     font-family: var(--font-display);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .box-glow {
+    box-shadow: 0 0 24px rgb(249 112 21 / 0.4);
   }
 
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--color-fg) 18%, transparent) transparent;
+    scrollbar-color: color-mix(in oklab, var(--color-accent) 40%, transparent) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -93,16 +102,16 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--color-fg) 18%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 40%, transparent);
     border-radius: 99px;
   }
 
   .orb-core {
     background: radial-gradient(
       circle at 38% 32%,
-      var(--color-fg) 0%,
-      color-mix(in oklab, var(--color-accent) 55%, var(--color-raised)) 38%,
-      var(--color-raised) 72%,
+      #ffb070 0%,
+      var(--color-accent) 38%,
+      #7e2a0c 72%,
       var(--color-bg) 100%
     );
   }

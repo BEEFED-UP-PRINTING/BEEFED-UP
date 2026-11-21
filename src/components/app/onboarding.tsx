@@ -12,8 +12,8 @@ export function Onboarding() {
   const playSting = useBup((s) => s.profile.playSting);
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
-  const [role, setRole] = useState("Founder");
-  const [styles, setStyles] = useState<string[]>(["minimal", "luxury"]);
+  const [role, setRole] = useState("Artist");
+  const [styles, setStyles] = useState<string[]>(["street", "brutalist"]);
 
   function toggleStyle(id: string) {
     setStyles((prev) =>
@@ -35,23 +35,23 @@ export function Onboarding() {
       <div className="w-full max-w-md">
         {step === 0 && (
           <div className="flex flex-col items-center text-center">
-            <BupMark size={52} className="text-accent" />
-            <p className="mt-8 text-xs font-medium tracking-[0.22em] text-muted uppercase">
+            <BupMark size={52} className="text-accent box-glow rounded-lg" />
+            <p className="mt-8 font-display text-xs font-medium tracking-[0.28em] text-muted">
               BUP AI
             </p>
-            <h1 className="font-display mt-4 text-4xl leading-tight tracking-[-0.03em] text-fg sm:text-5xl">
+            <h1 className="font-display mt-4 text-4xl font-bold leading-tight text-fg sm:text-5xl">
               From nothing
               <br />
               to something.
             </h1>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted">
-              Personal creative intelligence. Learns how you see — especially
-              marks, type, and color. Built by BUP AI.
+              Beefed Up Printing design advisor. Logos, merch graphics, print
+              calls — learns how you see.
             </p>
-            <Button className="mt-10 w-full" size="lg" onClick={enter}>
+            <Button className="mt-10 w-full font-display tracking-[0.18em]" size="lg" onClick={enter}>
               Enter
             </Button>
-            <p className="mt-4 text-xs text-subtle">
+            <p className="mt-4 text-xs tracking-[0.2em] text-subtle uppercase">
               They slept, we built.
             </p>
           </div>
@@ -59,10 +59,10 @@ export function Onboarding() {
 
         {step === 1 && (
           <div>
-            <p className="text-xs font-medium tracking-[0.18em] text-muted uppercase">
+            <p className="font-display text-xs font-medium tracking-[0.22em] text-muted">
               01 — Name
             </p>
-            <h2 className="font-display mt-3 text-3xl tracking-[-0.03em]">
+            <h2 className="font-display mt-3 text-3xl font-bold">
               What should I call you?
             </h2>
             <Input
@@ -85,10 +85,10 @@ export function Onboarding() {
 
         {step === 2 && (
           <div>
-            <p className="text-xs font-medium tracking-[0.18em] text-muted uppercase">
+            <p className="font-display text-xs font-medium tracking-[0.22em] text-muted">
               02 — Work
             </p>
-            <h2 className="font-display mt-3 text-3xl tracking-[-0.03em]">
+            <h2 className="font-display mt-3 text-3xl font-bold">
               What do you make?
             </h2>
             <div className="mt-8 flex flex-wrap gap-2">
@@ -109,10 +109,10 @@ export function Onboarding() {
 
         {step === 3 && (
           <div>
-            <p className="text-xs font-medium tracking-[0.18em] text-muted uppercase">
+            <p className="font-display text-xs font-medium tracking-[0.22em] text-muted">
               03 — Taste
             </p>
-            <h2 className="font-display mt-3 text-3xl tracking-[-0.03em]">
+            <h2 className="font-display mt-3 text-3xl font-bold">
               How should the work feel?
             </h2>
             <p className="mt-2 text-sm text-muted">Pick up to three. BUP will learn from here.</p>
@@ -122,9 +122,9 @@ export function Onboarding() {
                   key={s.id}
                   type="button"
                   onClick={() => toggleStyle(s.id)}
-                  className={`rounded-xl border p-3 text-left transition-colors duration-150 ${
+                  className={`rounded-md border p-3 text-left transition-colors duration-150 ${
                     styles.includes(s.id)
-                      ? "border-accent/50 bg-raised"
+                      ? "border-accent bg-raised"
                       : "border-border bg-surface hover:border-fg/20"
                   }`}
                 >
@@ -137,11 +137,7 @@ export function Onboarding() {
               <Button variant="ghost" onClick={() => setStep(2)}>
                 Back
               </Button>
-              <Button
-                onClick={() =>
-                  complete({ name, role, styles })
-                }
-              >
+              <Button onClick={() => complete({ name, role, styles })}>
                 Start working
               </Button>
             </div>

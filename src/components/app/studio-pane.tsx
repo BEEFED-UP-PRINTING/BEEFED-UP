@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Heart, Loader2, Trash2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
+import { AvatarStudio } from "@/components/app/avatar-studio";
+import { SunoPane } from "@/components/app/suno-pane";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
@@ -21,6 +23,45 @@ export function StudioPane() {
   const [busy, setBusy] = useState(false);
   const [kitId, setKitId] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
+  const [mode, setMode] = useState<"marks" | "avatars" | "suno">("avatars");
+
+  const tabs = (
+    <div className="flex gap-1.5 border-b border-border px-4 py-3">
+      {(
+        [
+          ["avatars", "Bushie"],
+          ["marks", "Marks"],
+          ["suno", "Suno"],
+        ] as const
+      ).map(([id, label]) => (
+        <Badge key={id} active={mode === id} onClick={() => setMode(id)}>
+          {label}
+        </Badge>
+      ))}
+    </div>
+  );
+
+  if (mode === "avatars") {
+    return (
+      <div className="flex h-full min-h-0 flex-col">
+        {tabs}
+        <div className="min-h-0 flex-1">
+          <AvatarStudio />
+        </div>
+      </div>
+    );
+  }
+
+  if (mode === "suno") {
+    return (
+      <div className="flex h-full min-h-0 flex-col">
+        {tabs}
+        <div className="min-h-0 flex-1">
+          <SunoPane />
+        </div>
+      </div>
+    );
+  }
 
   async function generate() {
     if (!brief.name.trim()) {
@@ -67,7 +108,9 @@ export function StudioPane() {
   const selectedWork = logos.find((l) => l.id === selected) ?? logos[0];
 
   return (
-    <div className="flex h-full min-h-0 flex-col lg:flex-row">
+    <div className="flex h-full min-h-0 flex-col">
+      {tabs}
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
       <section className="border-b border-border lg:w-[22rem] lg:shrink-0 lg:overflow-y-auto lg:border-r lg:border-b-0 scrollbar-thin">
         <div className="px-4 py-5 sm:px-5">
           <p className="text-xs font-medium tracking-[0.18em] text-muted uppercase">
@@ -284,6 +327,7 @@ export function StudioPane() {
           </div>
         )}
       </section>
+      </div>
     </div>
   );
 }

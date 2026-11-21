@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
+  AvatarLayout,
+  AvatarWork,
   LogoBrief,
   LogoWork,
   MemoryItem,
@@ -14,10 +16,10 @@ import { uid } from "./utils";
 
 const emptyBrief = (): LogoBrief => ({
   name: "",
-  industry: "Studio / agency",
-  style: "minimal",
-  form: "wordmark",
-  colors: "bone and ink",
+  industry: "Fashion",
+  style: "street",
+  form: "emblem",
+  colors: "street orange and ink",
   notes: "",
   background: "ink",
 });
@@ -51,6 +53,7 @@ interface BupState {
   activeThreadId: string;
   memories: MemoryItem[];
   logos: LogoWork[];
+  avatars: AvatarWork[];
   brief: LogoBrief;
   hydrated: boolean;
   setHydrated: (v: boolean) => void;
@@ -82,6 +85,9 @@ interface BupState {
   toggleLike: (id: string) => void;
   setLogoKit: (id: string, kit: LogoWork["kit"]) => void;
   removeLogo: (id: string) => void;
+  addAvatar: (work: { imageUrl: string; layout: AvatarLayout; oneOfOne: boolean }) => string;
+  toggleAvatarLike: (id: string) => void;
+  removeAvatar: (id: string) => void;
   resetAll: () => void;
 }
 
@@ -96,6 +102,7 @@ export const useBup = create<BupState>()(
         activeThreadId: first.id,
         memories: [],
         logos: [],
+        avatars: [],
         brief: emptyBrief(),
         hydrated: false,
         setHydrated: (v) => set({ hydrated: v }),
@@ -240,6 +247,33 @@ export const useBup = create<BupState>()(
           })),
         removeLogo: (id) =>
           set((s) => ({ logos: s.logos.filter((l) => l.id !== id) })),
+        addAvatar: (work) => {
+          const id = uid("av");
+          set((s) => ({
+            avatars: [
+              { ...work, id, liked: false, createdAt: Date.now() },
+              ...s.avatars,
+            ].slice(0, 12),
+          }));
+          return id;
+        },
+        toggleAvatarLike: (id) => {
+          const { avatars, addMemories } = get();
+          const avatar = avatars.find((a) => a.id === id);
+          set((s) => ({
+            avatars: s.avatars.map((a) => (a.id === id ? { ...a, liked: !a.liked } : a)),
+          }));
+          if (avatar && !avatar.liked) {
+            addMemories([
+              {
+                kind: "style",
+                text: `Kept a Bushie MET LYN ${avatar.layout} avatar. Face changes, lockup stays Bushie / MET LYN, orange on black.`,
+              },
+            ]);
+          }
+        },
+        removeAvatar: (id) =>
+          set((s) => ({ avatars: s.avatars.filter((a) => a.id !== id) })),
         resetAll: () => {
           const thread = newThread();
           set({
@@ -249,6 +283,7 @@ export const useBup = create<BupState>()(
             activeThreadId: thread.id,
             memories: [],
             logos: [],
+            avatars: [],
             brief: emptyBrief(),
           });
         },
@@ -266,9 +301,11 @@ export const useBup = create<BupState>()(
         activeThreadId: s.activeThreadId,
         memories: s.memories,
         logos: s.logos.slice(0, 24),
+        avatars: s.avatars.slice(0, 8),
         brief: s.brief,
       }),
       onRehydrateStorage: () => (state) => {
+        if (state && !Array.isArray(state.avatars)) state.avatars = [];
         state?.setHydrated(true);
       },
     },

@@ -16,19 +16,10 @@ export function BupMark({
       aria-hidden="true"
       className={cn("shrink-0", className)}
     >
-      <rect
-        x="1"
-        y="1"
-        width="34"
-        height="34"
-        rx="10"
-        stroke="currentColor"
-        strokeOpacity="0.35"
-        strokeWidth="1.2"
-      />
+      <rect width="36" height="36" rx="8" fill="currentColor" />
       <path
-        d="M12 11.5h7.2c3.1 0 5.15 1.55 5.15 4.05 0 1.55-.85 2.75-2.25 3.35 1.7.5 2.75 1.85 2.75 3.7 0 2.7-2.2 4.4-5.55 4.4H12V11.5Zm3.05 2.4v3.7h3.85c1.55 0 2.4-.7 2.4-1.85s-.85-1.85-2.4-1.85H15.05Zm0 5.95v4.25h4.35c1.7 0 2.7-.8 2.7-2.15s-1-2.1-2.7-2.1H15.05Z"
-        fill="currentColor"
+        d="M11.2 9.6h8.1c3.35 0 5.55 1.7 5.55 4.4 0 1.65-.9 2.95-2.4 3.6 1.85.55 2.95 2 2.95 4 0 2.9-2.4 4.8-6 4.8H11.2V9.6Zm3.3 2.55v4.05h4.15c1.65 0 2.55-.75 2.55-2.05s-.9-2-2.55-2H14.5Zm0 6.4v4.6h4.7c1.85 0 2.9-.85 2.9-2.3s-1.05-2.3-2.9-2.3H14.5Z"
+        className="fill-accent-fg"
       />
     </svg>
   );

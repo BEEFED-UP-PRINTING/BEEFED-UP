@@ -1,12 +1,12 @@
 {
   "name": "BUP AI",
   "short_name": "BUP AI",
-  "description": "An editorial luxury personal creative-intelligence assistant.",
+  "description": "Beefed Up Printing design advisor — merch, logos, and a studio that learns your taste.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0a0a0b",
-  "theme_color": "#0a0a0b",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
   "icons": [
     {
       "src": "/icon-192.png",

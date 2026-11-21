@@ -78,6 +78,17 @@ export interface LogoWork {
   createdAt: number;
 }
 
+export type AvatarLayout = "badge" | "stack" | "crest";
+
+export interface AvatarWork {
+  id: string;
+  imageUrl: string;
+  layout: AvatarLayout;
+  oneOfOne: boolean;
+  liked: boolean;
+  createdAt: number;
+}
+
 export interface Profile {
   name: string;
   role: string;
